@@ -23,7 +23,7 @@ export const InputField = () => {
       value={userInput}
       onChange={handleChange}
       disabled={status !== "playing"}
-      className="w-full p-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+      className="w-full p-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
       autoComplete="off"
       autoCorrect="off"
       autoCapitalize="off"

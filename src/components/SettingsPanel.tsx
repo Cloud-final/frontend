@@ -3,24 +3,44 @@ import { useEffect } from "react";
 import { DIFFICULTY_CONFIG, DIFFICULTY_LEVELS } from "@/config/difficulty";
 import { useSettingsStore } from "@/stores/settings.store";
 import { useTypingGameStore } from "@/stores/typingGame.store";
+import { fetchSongData } from "@/lib/api/song";
 
 export const SettingsPanel = () => {
-  const { difficulty, setDifficulty } = useSettingsStore();
-  const { audio, initAudio, setAudioSource, stopAudio } = useTypingGameStore();
+  const { difficulty, setDifficulty, setSongName } = useSettingsStore();
+  const { audio, initAudio, setAudioSource, stopAudio, initTest } =
+    useTypingGameStore();
   useEffect(() => {
-    if (!audio) {
-      initAudio("/god-sound.weba", false);
-    }
-  }, []);
+    const fetchTrack = async () => {
+      const songData = await fetchSongData(
+        DIFFICULTY_CONFIG[difficulty].value,
+        "1"
+      );
+      if (songData) {
+        initTest(songData.lyrics);
+        if (!audio) {
+          initAudio(songData.track);
+        } else {
+          setAudioSource(songData.track);
+        }
+        setSongName(songData.name);
+      }
+      stopAudio();
+    };
 
-  useEffect(() => {
-    setAudioSource("/god-sound.weba");
-    stopAudio();
-  }, [difficulty]);
+    fetchTrack();
+  }, [
+    difficulty,
+    audio,
+    initAudio,
+    initTest,
+    setAudioSource,
+    stopAudio,
+    setSongName,
+  ]);
 
   return (
-    <div className="w-full flex flex-col gap-4 p-4 bg-gray-800 rounded-lg">
-      <h2 className="text-xl font-bold text-yellow-400 text-center">
+    <div className="w-full flex flex-col gap-2 p-4 bg-gray-800 rounded-lg">
+      <h2 className="font-semibold text-yellow-400 text-center">
         Who are you?
       </h2>
       <div className="flex gap-3 justify-center">
@@ -29,7 +49,7 @@ export const SettingsPanel = () => {
             key={level}
             onClick={() => setDifficulty(level)}
             className={`
-              px-6 py-3 rounded-lg font-bold text-white transition-all cursor-pointer
+              px-8 py-3 rounded-lg font-semibold text-white transition-all cursor-pointer
               ${DIFFICULTY_CONFIG[level].color}
               ${
                 difficulty === level

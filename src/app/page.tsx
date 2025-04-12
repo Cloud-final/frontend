@@ -4,9 +4,9 @@ import { TestContainer } from "@/components/TestContainer";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-mono">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <div className="w-full text-6xl font-bold text-center text-yellow-400">
+    <div className="grid grid-rows-[0px_1fr_0px] items-center justify-items-center min-h-screen gap-8 font-mono">
+      <main className="flex flex-col gap-4 row-start-2 items-center sm:items-start">
+        <div className="w-full text-4xl font-bold text-center text-yellow-400">
           OIIA TYPE
         </div>
         <SettingsPanel></SettingsPanel>

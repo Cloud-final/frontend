@@ -5,7 +5,7 @@ import { useSettingsStore } from "@/stores/settings.store";
 export const ResultsModal = () => {
   const { difficulty } = useSettingsStore();
   const { correctWords, words, resetTest } = useTypingGameStore();
-  const totalWords = words.length;
+  const totalWords = words.reduce((count, line) => count + line.length, 0);
   const accuracy =
     totalWords > 0 ? Math.round((correctWords / totalWords) * 100) : 0;
 
@@ -26,7 +26,7 @@ export const ResultsModal = () => {
             </p>
           ) : (
             <p className="text-red-400 italic">
-              ❌ Not even {difficulty}'s shadow would accept this...
+              ❌ Not even {difficulty}&apos;s shadow would accept this...
             </p>
           )}
         </div>

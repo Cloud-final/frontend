@@ -6,19 +6,22 @@ export const DIFFICULTY_CONFIG = {
     label: "Human",
     color: "bg-green-500",
     description: "For mere mortals",
-    default: false,
+    default: true,
+    value: "simple",
   },
   Superman: {
     label: "Superman",
     color: "bg-blue-500",
     description: "Heroic challenge",
-    default: true, // This is our default difficulty
+    default: false,
+    value: "medium",
   },
   God: {
     label: "God",
     color: "bg-purple-500",
     description: "Divine punishment",
     default: false,
+    value: "hard",
   },
 } as const;
 
@@ -27,6 +30,8 @@ export type DifficultyLevel = keyof typeof DIFFICULTY_CONFIG;
 export const DIFFICULTY_LEVELS = Object.keys(
   DIFFICULTY_CONFIG
 ) as DifficultyLevel[];
+export type DifficultyValue =
+  (typeof DIFFICULTY_CONFIG)[DifficultyLevel]["value"];
 export const DEFAULT_DIFFICULTY = Object.values(DIFFICULTY_CONFIG).find(
   (level) => level.default
 )?.label as DifficultyLevel;

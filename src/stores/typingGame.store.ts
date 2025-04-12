@@ -3,14 +3,17 @@ import { create } from "zustand";
 interface TypingGameState {
   // Game state
   status: "ready" | "playing" | "finished";
-  words: string[];
+  words: string[][];
+  currentLineIndex: number;
   currentWordIndex: number;
   userInput: string;
   correctWords: number;
-  typedWords: string[];
+  typedWords: string[][];
 
   // Audio
   audio: HTMLAudioElement | null;
+  duration: number;
+  currentTime: number;
   initAudio: (src: string, loop?: boolean) => void;
   setAudioSource: (src: string) => void;
   playAudio: () => void;
@@ -18,7 +21,7 @@ interface TypingGameState {
 
   // Actions
   handleInput: (input: string) => void;
-  initTest: (wordList: string[]) => void;
+  initTest: (wordLines: string[][]) => void;
   resetTest: () => void;
   startTest: () => void;
   finishTest: () => void;
@@ -28,6 +31,7 @@ export const useTypingGameStore = create<TypingGameState>((set, get) => ({
   // Game state
   status: "ready",
   words: [],
+  currentLineIndex: 0,
   currentWordIndex: 0,
   userInput: "",
   correctWords: 0,
@@ -35,10 +39,21 @@ export const useTypingGameStore = create<TypingGameState>((set, get) => ({
 
   // Audio
   audio: null,
+  duration: 0,
+  currentTime: 0,
 
   initAudio: (src, loop = false) => {
     const audio = new Audio(src);
     audio.loop = loop;
+
+    audio.onloadedmetadata = () => {
+      set({ duration: audio.duration });
+    };
+
+    audio.ontimeupdate = () => {
+      set({ currentTime: audio.currentTime });
+    };
+
     audio.onended = () => {
       get().finishTest();
     };
@@ -72,17 +87,35 @@ export const useTypingGameStore = create<TypingGameState>((set, get) => ({
     set((state) => {
       if (state.status !== "playing") return {};
 
-      const currentWord = state.words[state.currentWordIndex];
+      const { currentLineIndex, currentWordIndex, words, typedWords } = state;
+
+      const currentLine = words[currentLineIndex] || [];
+      const currentWord = currentLine[currentWordIndex] || "";
 
       if (input.endsWith(" ")) {
+        const trimmedInput = input.trim();
+        const isCorrect = trimmedInput === currentWord;
+
+        let nextLineIndex = currentLineIndex;
+        let nextWordIndex = currentWordIndex + 1;
+        const newTypedWords = [...typedWords];
+
+        if (newTypedWords.length < currentLineIndex + 1) {
+          newTypedWords.push([]);
+        }
+        newTypedWords[currentLineIndex].push(trimmedInput);
+
+        if (nextWordIndex >= currentLine.length) {
+          nextLineIndex += 1;
+          nextWordIndex = 0;
+        }
+
         return {
-          currentWordIndex: state.currentWordIndex + 1,
           userInput: "",
-          typedWords: [...state.typedWords, input.trim()],
-          correctWords:
-            input.trim() === currentWord
-              ? state.correctWords + 1
-              : state.correctWords,
+          currentWordIndex: nextWordIndex,
+          currentLineIndex: nextLineIndex,
+          typedWords: newTypedWords,
+          correctWords: isCorrect ? state.correctWords + 1 : state.correctWords,
         };
       }
 
@@ -91,18 +124,14 @@ export const useTypingGameStore = create<TypingGameState>((set, get) => ({
 
   initTest: (wordList) =>
     set({
-      status: "ready",
       words: wordList,
-      currentWordIndex: 0,
-      userInput: "",
-      correctWords: 0,
-      typedWords: [],
     }),
 
   resetTest: () => {
     get().stopAudio();
     set({
       status: "ready",
+      currentLineIndex: 0,
       currentWordIndex: 0,
       userInput: "",
       correctWords: 0,
