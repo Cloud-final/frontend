@@ -4,10 +4,16 @@ import { WordsDisplay } from "./WordsDisplay";
 import { InputField } from "./InputField";
 import { ResultsModal } from "./ResultModal";
 import { useGlobalKeyHandler } from "@/hooks/useGlobalKeyHandler";
+import { useEffect } from "react";
 
 export const TestContainer = () => {
   useGlobalKeyHandler();
-  const { status } = useTypingGameStore();
+  const { status, currentLineIndex, words, finishTest } = useTypingGameStore();
+  useEffect(() => {
+    if (currentLineIndex == words.length) {
+      finishTest();
+    }
+  }, [currentLineIndex, finishTest, words]);
 
   return (
     <div className="max-w-4xl min-w-2xl mx-auto">
