@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+const lambda_api = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_LAMBDA_API,
   timeout: 5000,
 });
 
-export default api;
+export { lambda_api };
