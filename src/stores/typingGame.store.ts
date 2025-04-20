@@ -23,6 +23,7 @@ interface TypingGameState {
   handleInput: (input: string) => void;
   initTest: (wordLines: string[][]) => void;
   resetTest: () => void;
+  closeTest:() => void;
   startTest: () => void;
   finishTest: () => void;
 }
@@ -137,6 +138,12 @@ export const useTypingGameStore = create<TypingGameState>((set, get) => ({
       correctWords: 0,
       typedWords: [],
     });
+  },
+
+  closeTest: () => {
+    get().stopAudio();
+    get().setAudioSource("");
+    get().resetTest();    
   },
 
   startTest: () => {

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useTypingGameStore } from "@/stores/typingGame.store";
 
 export const useGlobalKeyHandler = () => {
-  const { resetTest, status } = useTypingGameStore();
+  const { resetTest, startTest, status } = useTypingGameStore();
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -10,9 +10,14 @@ export const useGlobalKeyHandler = () => {
         e.preventDefault();
         resetTest();
       }
+      
+      if (e.key === "Enter" && status === "ready") {
+        e.preventDefault();
+        startTest();
+      }
     };
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [resetTest, status]);
+  }, [resetTest, startTest, status]);
 };

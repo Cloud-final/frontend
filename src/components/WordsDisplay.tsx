@@ -7,7 +7,7 @@ export const WordsDisplay = () => {
   return (
     <div className="text-xl leading-relaxed min-h-[140px] font-mono">
       {words.map((line, lineIdx) => (
-        <div key={lineIdx} className="text-center">
+        <div key={lineIdx} className="">
           {line.map((word, wordIdx) => {
             // upcoming line
             if (lineIdx >= 4 && lineIdx - currentLineIndex >= 2) {
@@ -39,7 +39,7 @@ export const WordsDisplay = () => {
                           ? typed[charIdx] === char
                             ? "text-green-500"
                             : "text-red-500 underline"
-                          : "text-gray-400 dark:text-gray-600"
+                          : "text-gray-500 dark:text-gray-600"
                       }
                     >
                       {char}
@@ -94,7 +94,7 @@ export const WordsDisplay = () => {
             return (
               <span
                 key={wordIdx}
-                className="text-gray-900 dark:text-white mr-1"
+                className="text-gray-900 dark:text-gray-400 mr-1"
               >
                 {word}
               </span>

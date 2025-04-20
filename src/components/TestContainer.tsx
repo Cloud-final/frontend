@@ -16,11 +16,14 @@ export const TestContainer = () => {
   }, [currentLineIndex, finishTest, words]);
 
   return (
-    <div className="max-w-4xl min-w-2xl mx-auto">
+    <div className="flex justify-center">
       {status === "finished" && <ResultsModal></ResultsModal>}
-      <div className="bg-gray-100 dark:bg-gray-800 rounded-lg py-4 px-6">
+      <div className="w-full mx-[30vw] rounded-lg p-6 flex flex-col gap-3">
         <WordsDisplay />
         <InputField />
+        <div className="text-xs text-gray-400">
+          <p>Press ENTER to Start | Press ESC to stop</p>
+        </div>
       </div>
     </div>
   );

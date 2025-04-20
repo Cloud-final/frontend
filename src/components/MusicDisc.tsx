@@ -4,10 +4,9 @@ import { useTypingGameStore } from "@/stores/typingGame.store";
 import { useSettingsStore } from "@/stores/settings.store";
 
 export const MusicDisc = () => {
-  const { songName } = useSettingsStore();
+  const { songName, difficulty } = useSettingsStore();
   const { status, startTest, resetTest, currentTime, duration } =
     useTypingGameStore();
-
   const handleClick = () => {
     if (status === "playing") {
       resetTest();
@@ -19,9 +18,22 @@ export const MusicDisc = () => {
   const timeLeft = Math.max(0, Math.floor(duration - currentTime));
 
   return (
-    <div className="w-full flex flex-col items-center gap-4">
+    <div className="w-screen flex flex-col items-center gap-4 mt-40 mb-10">
+      <div className="text-center flex flex-col gap-1">
+        <p className="font-semibold">
+          {difficulty}
+        </p>
+        <p className="font-semibold">
+          {songName}
+        </p>
+        <p className={`font-semibold text-sm ${
+          status === "playing" ? "text-red-400 text-xl" : "mb-2"
+        }`}>
+          {status === "playing" ? `${timeLeft}s` : `Duration: ${Math.floor(duration)}s`}
+        </p>
+      </div>
       <div
-        className={`relative w-48 h-48 rounded-full bg-gradient-to-br from-yellow-100 via-yellow-300 to-yellow-500 overflow-hidden cursor-pointer transition-transform duration-300 hover:scale-105 ${
+        className={`relative w-48 h-48 rounded-full bg-gradient-to-br overflow-hidden cursor-pointer transition-transform duration-300 hover:scale-105 ${
           status === "playing" ? "animate-spin-slow" : ""
         }`}
         onClick={handleClick}
@@ -33,16 +45,6 @@ export const MusicDisc = () => {
           unoptimized
           className="rounded-full object-cover"
         />
-      </div>
-      <div className="text-center">
-        <p className="font-semibold mb-1">
-          {status === "playing" ? `Time left: ${timeLeft}s` : `${songName}`}
-        </p>
-        <p className="text-xs text-gray-400">
-          {status === "playing"
-            ? "Press Esc to stop."
-            : "Say 'OIIA OIIA OI' to start."}
-        </p>
       </div>
     </div>
   );
